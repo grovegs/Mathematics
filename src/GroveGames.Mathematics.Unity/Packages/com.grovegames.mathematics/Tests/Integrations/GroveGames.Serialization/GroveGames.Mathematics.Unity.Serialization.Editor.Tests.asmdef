@@ -1,0 +1,35 @@
+{
+    "name": "GroveGames.Mathematics.Unity.Serialization.Editor.Tests",
+    "rootNamespace": "GroveGames.Mathematics.Unity.Serialization.Editor.Tests",
+    "references": [
+        "GroveGames.Mathematics.Unity",
+        "GroveGames.Mathematics.Unity.Serialization",
+        "UnityEngine.TestRunner",
+        "UnityEditor.TestRunner"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "nunit.framework.dll",
+        "GroveGames.Mathematics.dll",
+        "GroveGames.Serialization.dll",
+        "GroveGames.Database.dll"
+    ],
+    "autoReferenced": false,
+    "defineConstraints": [
+        "UNITY_INCLUDE_TESTS",
+        "GROVEGAMES_SERIALIZATION"
+    ],
+    "versionDefines": [
+        {
+            "name": "com.grovegames.serialization",
+            "expression": "0.3.0",
+            "define": "GROVEGAMES_SERIALIZATION"
+        }
+    ],
+    "noEngineReferences": false
+}

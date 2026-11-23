@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="src\GroveGames.Mathematics\GroveGames.Mathematics.csproj" />
+  <Project Path="tests\GroveGames.Mathematics.Tests\GroveGames.Mathematics.Tests.csproj" />
+</Solution>

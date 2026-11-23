@@ -1,0 +1,20 @@
+{
+  "name": "com.grovegames.mathematics",
+  "version": "0.0.0",
+  "displayName": "GroveGames.Mathematics",
+  "description": "Deterministic random numbers, big numbers and shuffle bags for .NET and Unity",
+  "unity": "2022.3",
+  "documentationUrl": "https://github.com/grovegs/Mathematics",
+  "changelogUrl": "https://github.com/grovegs/Mathematics/releases",
+  "licensesUrl": "https://github.com/grovegs/Mathematics/blob/main/LICENSE",
+  "keywords": [
+    "mathematics",
+    "random",
+    "big-number",
+    "shuffle-bag"
+  ],
+  "author": {
+    "name": "Grove Games",
+    "url": "https://github.com/grovegs"
+  }
+}

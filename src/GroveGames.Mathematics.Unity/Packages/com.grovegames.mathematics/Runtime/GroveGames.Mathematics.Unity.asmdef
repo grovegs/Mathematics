@@ -1,0 +1,16 @@
+{
+    "name": "GroveGames.Mathematics.Unity",
+    "rootNamespace": "GroveGames.Mathematics.Unity",
+    "references": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "GroveGames.Mathematics.dll"
+    ],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
