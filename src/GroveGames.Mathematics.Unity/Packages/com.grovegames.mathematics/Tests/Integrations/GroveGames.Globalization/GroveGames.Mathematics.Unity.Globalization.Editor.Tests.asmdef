@@ -1,0 +1,35 @@
+{
+    "name": "GroveGames.Mathematics.Unity.Globalization.Editor.Tests",
+    "rootNamespace": "GroveGames.Mathematics.Unity.Globalization.Editor.Tests",
+    "references": [
+        "GroveGames.Mathematics.Unity",
+        "GroveGames.Mathematics.Unity.Globalization",
+        "GroveGames.Globalization.Unity",
+        "UnityEngine.TestRunner",
+        "UnityEditor.TestRunner"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "nunit.framework.dll",
+        "GroveGames.Mathematics.dll",
+        "GroveGames.Globalization.dll"
+    ],
+    "autoReferenced": false,
+    "defineConstraints": [
+        "UNITY_INCLUDE_TESTS",
+        "GROVEGAMES_GLOBALIZATION"
+    ],
+    "versionDefines": [
+        {
+            "name": "com.grovegames.globalization",
+            "expression": "0.1.0",
+            "define": "GROVEGAMES_GLOBALIZATION"
+        }
+    ],
+    "noEngineReferences": false
+}
