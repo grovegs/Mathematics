@@ -212,7 +212,7 @@ public readonly struct BigNumber : IEquatable<BigNumber>, IComparable<BigNumber>
             return Math.Round(_mantissa * s_powersOfTen[_exponent], MantissaDecimals - (int)_exponent);
         }
 
-        return Scale(_mantissa, _exponent);
+        return ScaleByPowerOfTen(_mantissa, _exponent);
     }
 
     public bool Equals(BigNumber other)
@@ -296,7 +296,7 @@ public readonly struct BigNumber : IEquatable<BigNumber>, IComparable<BigNumber>
         }
 
         var shift = (int)Math.Floor(Math.Log10(Math.Abs(mantissa)));
-        var shifted = Scale(mantissa, -shift);
+        var shifted = ScaleByPowerOfTen(mantissa, -shift);
 
         if (Math.Abs(shifted) >= 10d)
         {
@@ -328,7 +328,7 @@ public readonly struct BigNumber : IEquatable<BigNumber>, IComparable<BigNumber>
         normalizedExponent = exponent + shift;
     }
 
-    private static double Scale(double value, long power)
+    private static double ScaleByPowerOfTen(double value, long power)
     {
         if (power >= 0L && power < s_powersOfTen.Length)
         {
