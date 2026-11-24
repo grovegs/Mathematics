@@ -12,6 +12,7 @@ Deterministic random numbers, big numbers and shuffle bags for .NET and Unity
 - `IRandomNumberGenerator` and `RandomNumberGenerator`: a seeded generator that returns the same sequence for the same seed on every platform
 - `BigNumber`: a mantissa and exponent value for idle-game numbers far beyond the range of `double`
 - `ShuffleBag`: draws every index once per round and never the same index twice in a row
+- Test doubles for your own tests: `FakeRandomNumberGenerator` in the editor-only `GroveGames.Mathematics.Unity.Testing` assembly
 
 ## .NET
 
