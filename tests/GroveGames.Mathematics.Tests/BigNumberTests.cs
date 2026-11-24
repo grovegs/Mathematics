@@ -46,6 +46,104 @@ public sealed class BigNumberTests
     }
 
     [Fact]
+    public void Constructor_Integer_KeepsExactMantissa()
+    {
+        BigNumber number = 73;
+
+        Assert.Equal(7.3d, number.Mantissa);
+        Assert.Equal(1L, number.Exponent);
+    }
+
+    [Fact]
+    public void Add_IntegersSummingToHundred_EqualsHundred()
+    {
+        BigNumber sum = 75;
+
+        sum = sum + 7 + 1 + 15 + 2;
+
+        Assert.Equal((BigNumber)100, sum);
+        Assert.True(sum >= 100);
+    }
+
+    [Fact]
+    public void Add_RepeatedEarnAndSpend_DoesNotDrift()
+    {
+        var sum = BigNumber.Zero;
+        var expected = 0L;
+
+        for (var i = 0; i < 10000; i++)
+        {
+            var amount = i % 3 == 2 ? -100 : (i * 37 % 97) + 1;
+
+            if (expected + amount < 0)
+            {
+                continue;
+            }
+
+            sum += amount;
+            expected += amount;
+        }
+
+        Assert.Equal((BigNumber)expected, sum);
+    }
+
+    [Fact]
+    public void Add_TenthsTenTimes_EqualsOne()
+    {
+        var sum = BigNumber.Zero;
+
+        for (var i = 0; i < 10; i++)
+        {
+            sum += 0.1d;
+        }
+
+        Assert.Equal(BigNumber.One, sum);
+    }
+
+    [Theory]
+    [InlineData(435)]
+    [InlineData(115)]
+    [InlineData(99999)]
+    [InlineData(123456789012345L)]
+    public void ToDouble_Integer_ReturnsExactValue(long value)
+    {
+        BigNumber number = value;
+
+        var result = number.ToDouble();
+
+        Assert.Equal((double)value, result);
+    }
+
+    [Fact]
+    public void Floor_ValueWithInexactProduct_KeepsValue()
+    {
+        BigNumber value = 435;
+
+        var floored = value.Floor();
+
+        Assert.Equal(value, floored);
+    }
+
+    [Fact]
+    public void Round_HalfWithInexactProduct_RoundsAwayFromZero()
+    {
+        BigNumber value = 2.675d;
+
+        var rounded = (value * 100).Round();
+
+        Assert.Equal((BigNumber)268, rounded);
+    }
+
+    [Fact]
+    public void TryParse_DriftedMantissa_SnapsToValue()
+    {
+        var parsed = BigNumber.TryParse("9.999999999999998e1", out var value);
+
+        Assert.True(parsed);
+        Assert.Equal((BigNumber)100, value);
+    }
+
+    [Fact]
     public void Add_FarApartExponents_KeepsLargerValue()
     {
         var large = new BigNumber(1d, 100L);

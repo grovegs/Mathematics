@@ -6,17 +6,17 @@ namespace GroveGames.Mathematics;
 public readonly struct BigNumber : IEquatable<BigNumber>, IComparable<BigNumber>
 {
     private const int MaxSignificantDigits = 17;
+    private const int MantissaDecimals = 14;
     private const long MaxDoubleExponent = 308;
     private const long MinDoubleExponent = -324;
-    private const double IntegerTolerance = 1e-9;
-
-    public static readonly BigNumber Zero = new(0d, 0L);
-    public static readonly BigNumber One = new(1d, 0L);
 
     private static readonly double[] s_powersOfTen =
     {
         1e0, 1e1, 1e2, 1e3, 1e4, 1e5, 1e6, 1e7, 1e8, 1e9, 1e10, 1e11, 1e12, 1e13, 1e14, 1e15, 1e16, 1e17
     };
+
+    public static readonly BigNumber Zero = new(0d, 0L);
+    public static readonly BigNumber One = new(1d, 0L);
 
     private readonly double _mantissa;
     private readonly long _exponent;
@@ -172,7 +172,7 @@ public readonly struct BigNumber : IEquatable<BigNumber>, IComparable<BigNumber>
 
     public BigNumber Floor()
     {
-        if (_exponent >= MaxSignificantDigits)
+        if (_exponent >= MantissaDecimals)
         {
             return this;
         }
@@ -182,20 +182,17 @@ public readonly struct BigNumber : IEquatable<BigNumber>, IComparable<BigNumber>
             return _mantissa < 0d ? -One : Zero;
         }
 
-        var value = _mantissa * s_powersOfTen[_exponent];
-        var rounded = Math.Round(value);
-        return new BigNumber(Math.Abs(value - rounded) < IntegerTolerance ? rounded : Math.Floor(value), 0L);
+        return new BigNumber(Math.Floor(ToDouble()), 0L);
     }
 
     public BigNumber Round()
     {
-        if (_exponent >= MaxSignificantDigits)
+        if (_exponent >= MantissaDecimals)
         {
             return this;
         }
 
-        var value = _exponent < 0 ? ToDouble() : _mantissa * s_powersOfTen[_exponent];
-        return new BigNumber(Math.Round(value, MidpointRounding.AwayFromZero), 0L);
+        return new BigNumber(Math.Round(ToDouble(), MidpointRounding.AwayFromZero), 0L);
     }
 
     public double ToDouble()
@@ -210,7 +207,12 @@ public readonly struct BigNumber : IEquatable<BigNumber>, IComparable<BigNumber>
             return 0d;
         }
 
-        return _mantissa * Math.Pow(10d, _exponent);
+        if (_exponent >= 0L && _exponent <= MantissaDecimals)
+        {
+            return Math.Round(_mantissa * s_powersOfTen[_exponent], MantissaDecimals - (int)_exponent);
+        }
+
+        return Scale(_mantissa, _exponent);
     }
 
     public bool Equals(BigNumber other)
@@ -294,7 +296,7 @@ public readonly struct BigNumber : IEquatable<BigNumber>, IComparable<BigNumber>
         }
 
         var shift = (int)Math.Floor(Math.Log10(Math.Abs(mantissa)));
-        var shifted = shift == 0 ? mantissa : mantissa * Math.Pow(10d, -shift);
+        var shifted = Scale(mantissa, -shift);
 
         if (Math.Abs(shifted) >= 10d)
         {
@@ -307,6 +309,14 @@ public readonly struct BigNumber : IEquatable<BigNumber>, IComparable<BigNumber>
             shift--;
         }
 
+        shifted = Math.Round(shifted, MantissaDecimals);
+
+        if (Math.Abs(shifted) >= 10d)
+        {
+            shifted /= 10d;
+            shift++;
+        }
+
         if (double.IsNaN(shifted) || double.IsInfinity(shifted))
         {
             normalizedMantissa = 0d;
@@ -316,5 +326,20 @@ public readonly struct BigNumber : IEquatable<BigNumber>, IComparable<BigNumber>
 
         normalizedMantissa = shifted;
         normalizedExponent = exponent + shift;
+    }
+
+    private static double Scale(double value, long power)
+    {
+        if (power >= 0L && power < s_powersOfTen.Length)
+        {
+            return value * s_powersOfTen[power];
+        }
+
+        if (power < 0L && -power < s_powersOfTen.Length)
+        {
+            return value / s_powersOfTen[-power];
+        }
+
+        return value * Math.Pow(10d, power);
     }
 }
