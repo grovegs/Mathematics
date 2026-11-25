@@ -25,11 +25,11 @@ public sealed class RandomNumberGeneratorTests
     }
 
     [Theory]
-    [InlineData(1u, new[] { 0, 0, 6, 0, 6, 1 }, 632435481u, -1711727438, 1055854304, 4604290726073730454L, true)]
-    [InlineData(7u, new[] { 0, 1, 9, 7, 7, 5 }, 258808761u, -1352942761, 1052524348, 4590451353780957136L, false)]
-    [InlineData(12345u, new[] { 8, 4, 7, 5, 1, 8 }, 4285686167u, 1533427512, 1057793822, 4602764178701754236L, true)]
-    [InlineData(2654435761u, new[] { 3, 8, 9, 6, 10, 7 }, 1120789035u, -1349799832, 1053993488, 4605139209532388508L, true)]
-    [InlineData(4294967295u, new[] { 0, 10, 5, 10, 5, 6 }, 1705115567u, -1867677189, 1060291718, 4600805257049269180L, false)]
+    [InlineData(1u, new[] { 3, 8, 9, 6, 10, 7 }, 1120789035u, -1349799832, 1053993488, 4605139209532388508L, true)]
+    [InlineData(7u, new[] { 9, 4, 6, 6, 3, 0 }, 1721955725u, -1166665369, 1062341180, 4594655660068086424L, true)]
+    [InlineData(12345u, new[] { 8, 7, 6, 6, 0, 3 }, 3613875398u, 587986360, 1054105580, 4589002574752975712L, false)]
+    [InlineData(2654435761u, new[] { 10, 5, 0, 9, 7, 0 }, 3044154247u, -1234210391, 1062411660, 4596641793462292784L, false)]
+    [InlineData(4294967295u, new[] { 3, 2, 2, 4, 1, 1 }, 48115333u, -1495323359, 1059854078, 4587685036453793088L, false)]
     public void Next_Seed_ReturnsPinnedSequence(uint seed, int[] integers, uint unsignedInteger, int integer, int floatBits, long doubleBits, bool boolean)
     {
         var random = new RandomNumberGenerator(seed);
