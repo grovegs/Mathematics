@@ -5,6 +5,7 @@ public sealed class RandomNumberGenerator : IRandomNumberGenerator
     private const uint SignBit = 0x80000000u;
     private const uint FloatOneBits = 0x3f800000u;
     private const ulong DoubleOneBits = 0x3ff0000000000000ul;
+    private const uint SeedMultiplier = 2654435761u;
 
     private readonly uint _seed;
     private uint _state;
@@ -16,7 +17,7 @@ public sealed class RandomNumberGenerator : IRandomNumberGenerator
         ArgumentOutOfRangeException.ThrowIfZero(seed);
 
         _seed = seed;
-        _state = seed;
+        _state = unchecked(seed * SeedMultiplier);
         NextState();
     }
 
