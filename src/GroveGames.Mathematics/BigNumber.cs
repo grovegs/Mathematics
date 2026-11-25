@@ -295,8 +295,25 @@ public readonly struct BigNumber : IEquatable<BigNumber>, IComparable<BigNumber>
             return;
         }
 
-        var shift = (int)Math.Floor(Math.Log10(Math.Abs(mantissa)));
-        var shifted = ScaleByPowerOfTen(mantissa, -shift);
+        var magnitude = Math.Abs(mantissa);
+        int shift;
+        double shifted;
+
+        if (magnitude >= 1d && magnitude < 10d)
+        {
+            shift = 0;
+            shifted = mantissa;
+        }
+        else if (magnitude >= 10d && magnitude < 100d)
+        {
+            shift = 1;
+            shifted = mantissa / 10d;
+        }
+        else
+        {
+            shift = (int)Math.Floor(Math.Log10(magnitude));
+            shifted = ScaleByPowerOfTen(mantissa, -shift);
+        }
 
         if (Math.Abs(shifted) >= 10d)
         {
