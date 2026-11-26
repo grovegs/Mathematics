@@ -43,6 +43,15 @@ internal static class ArgumentOutOfRangeExceptionExtensions
                 throw new ArgumentOutOfRangeException(paramName, value, $"'{paramName}' must be less than or equal to '{other}'.");
             }
         }
+
+        public static void ThrowIfLessThan<T>(T value, T other, [CallerArgumentExpression(nameof(value))] string? paramName = null)
+            where T : IComparable<T>
+        {
+            if (value.CompareTo(other) < 0)
+            {
+                throw new ArgumentOutOfRangeException(paramName, value, $"'{paramName}' must be greater than or equal to '{other}'.");
+            }
+        }
     }
 }
 

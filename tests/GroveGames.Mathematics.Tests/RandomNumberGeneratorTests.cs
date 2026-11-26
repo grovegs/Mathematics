@@ -125,4 +125,121 @@ public sealed class RandomNumberGeneratorTests
             Assert.NotEqual(1d, value);
         }
     }
+
+    [Fact]
+    public void Next_RangesWithSeed_ReturnPinnedSequence()
+    {
+        var random = new RandomNumberGenerator(7u);
+        var integers = new int[6];
+        var unsignedIntegers = new uint[6];
+        var unsignedMaxima = new uint[6];
+
+        for (var i = 0; i < 6; i++)
+        {
+            integers[i] = random.NextInt(-5, 5);
+        }
+
+        for (var i = 0; i < 6; i++)
+        {
+            unsignedIntegers[i] = random.NextUInt(3u, 9u);
+        }
+
+        for (var i = 0; i < 6; i++)
+        {
+            unsignedMaxima[i] = random.NextUInt(100u);
+        }
+
+        Assert.Equal(new[] { 4, -1, 1, 1, -2, -5 }, integers);
+        Assert.Equal(new[] { 5u, 4u, 8u, 4u, 8u, 3u }, unsignedIntegers);
+        Assert.Equal(new[] { 32u, 36u, 86u, 79u, 20u, 20u }, unsignedMaxima);
+    }
+
+    [Fact]
+    public void NextInt_RangeWiderThanIntMaxValue_StaysInRange()
+    {
+        var random = new RandomNumberGenerator(7u);
+        var outside = 0;
+
+        for (var i = 0; i < 1000; i++)
+        {
+            var value = random.NextInt(-2_000_000_000, 2_000_000_000);
+
+            if (value < -2_000_000_000 || value > 2_000_000_000)
+            {
+                outside++;
+            }
+        }
+
+        Assert.Equal(0, outside);
+    }
+
+    [Fact]
+    public void NextInt_FullRange_ReturnsDifferentValues()
+    {
+        var random = new RandomNumberGenerator(7u);
+        var values = new HashSet<int>();
+
+        for (var i = 0; i < 100; i++)
+        {
+            values.Add(random.NextInt(int.MinValue, int.MaxValue));
+        }
+
+        Assert.True(values.Count > 90);
+    }
+
+    [Fact]
+    public void NextInt_IntMaxValue_ReturnsNonNegativeValues()
+    {
+        var random = new RandomNumberGenerator(7u);
+        var negative = 0;
+
+        for (var i = 0; i < 1000; i++)
+        {
+            if (random.NextInt(int.MaxValue) < 0)
+            {
+                negative++;
+            }
+        }
+
+        Assert.Equal(0, negative);
+    }
+
+    [Fact]
+    public void NextUInt_UIntMaxValue_ReturnsDifferentValues()
+    {
+        var random = new RandomNumberGenerator(7u);
+        var values = new HashSet<uint>();
+
+        for (var i = 0; i < 100; i++)
+        {
+            values.Add(random.NextUInt(uint.MaxValue));
+            values.Add(random.NextUInt(0u, uint.MaxValue));
+        }
+
+        Assert.True(values.Count > 190);
+    }
+
+    [Fact]
+    public void NextInt_NegativeMax_ThrowsArgumentOutOfRangeException()
+    {
+        var random = new RandomNumberGenerator(7u);
+
+        Assert.Throws<ArgumentOutOfRangeException>(() => random.NextInt(-1));
+    }
+
+    [Fact]
+    public void NextInt_MaxBelowMin_ThrowsArgumentOutOfRangeException()
+    {
+        var random = new RandomNumberGenerator(7u);
+
+        Assert.Throws<ArgumentOutOfRangeException>(() => random.NextInt(5, 1));
+    }
+
+    [Fact]
+    public void NextUInt_MaxBelowMin_ThrowsArgumentOutOfRangeException()
+    {
+        var random = new RandomNumberGenerator(7u);
+
+        Assert.Throws<ArgumentOutOfRangeException>(() => random.NextUInt(5u, 1u));
+    }
 }
