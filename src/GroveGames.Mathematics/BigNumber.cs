@@ -9,6 +9,7 @@ public readonly struct BigNumber : IEquatable<BigNumber>, IComparable<BigNumber>
     private const int MantissaDecimals = 14;
     private const long MaxDoubleExponent = 308;
     private const long MinDoubleExponent = -324;
+    private const int MaxTextLength = 64;
 
     private static readonly double[] s_powersOfTen =
     {
@@ -282,8 +283,17 @@ public readonly struct BigNumber : IEquatable<BigNumber>, IComparable<BigNumber>
 
     public override string ToString()
     {
-        var mantissa = _mantissa.ToString("R", CultureInfo.InvariantCulture);
-        return _exponent == 0L ? mantissa : $"{mantissa}e{_exponent.ToString(CultureInfo.InvariantCulture)}";
+        Span<char> buffer = stackalloc char[MaxTextLength];
+        _mantissa.TryFormat(buffer, out var length, "R", CultureInfo.InvariantCulture);
+
+        if (_exponent != 0L)
+        {
+            buffer[length++] = 'e';
+            _exponent.TryFormat(buffer.Slice(length), out var exponentLength, default, CultureInfo.InvariantCulture);
+            length += exponentLength;
+        }
+
+        return buffer.Slice(0, length).ToString();
     }
 
     private static void Normalize(double mantissa, long exponent, out double normalizedMantissa, out long normalizedExponent)
@@ -308,6 +318,11 @@ public readonly struct BigNumber : IEquatable<BigNumber>, IComparable<BigNumber>
         {
             shift = 1;
             shifted = mantissa / 10d;
+        }
+        else if (magnitude >= 0.1d && magnitude < 1d)
+        {
+            shift = -1;
+            shifted = mantissa * 10d;
         }
         else
         {

@@ -5,10 +5,16 @@ namespace GroveGames.Mathematics.Testing
 {
     public sealed class FakeRandomNumberGenerator : IRandomNumberGenerator
     {
-        private readonly Queue<int> _integers = new();
-        private readonly Queue<bool> _booleans = new();
+        private readonly Queue<int> _integers;
+        private readonly Queue<bool> _booleans;
 
         public uint Seed => 0;
+
+        public FakeRandomNumberGenerator()
+        {
+            _integers = new Queue<int>();
+            _booleans = new Queue<bool>();
+        }
 
         public void EnqueueInt(int value)
         {

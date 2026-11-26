@@ -352,4 +352,20 @@ public sealed class BigNumberTests
 
         Assert.Equal(number, parsed);
     }
+
+    [Theory]
+    [InlineData(1.5d, 10L, 7.3d, 3L, 4611809404718548750L, 6L)]
+    [InlineData(1d, 0L, 3d, 0L, 4614688418178968227L, -1L)]
+    [InlineData(2.5d, 100L, 9.99d, 50L, 4612817553468899404L, 49L)]
+    [InlineData(-4.2d, 7L, 6.1d, 2L, -4603933920708143601L, 4L)]
+    public void Divide_MantissaQuotientBelowOne_ReturnsPinnedValue(double leftMantissa, long leftExponent, double rightMantissa, long rightExponent, long mantissaBits, long exponent)
+    {
+        var left = new BigNumber(leftMantissa, leftExponent);
+        var right = new BigNumber(rightMantissa, rightExponent);
+
+        var quotient = left / right;
+
+        Assert.Equal(mantissaBits, BitConverter.DoubleToInt64Bits(quotient.Mantissa));
+        Assert.Equal(exponent, quotient.Exponent);
+    }
 }

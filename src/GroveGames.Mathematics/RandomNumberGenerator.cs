@@ -37,12 +37,16 @@ public sealed class RandomNumberGenerator : IRandomNumberGenerator
 
     public int NextInt(int max)
     {
-        return Scale(unchecked(max + 1));
+        ArgumentOutOfRangeException.ThrowIfNegative(max);
+
+        return unchecked((int)Scale((uint)max + 1u));
     }
 
     public int NextInt(int min, int max)
     {
-        return unchecked(Scale(max + 1 - min) + min);
+        ArgumentOutOfRangeException.ThrowIfLessThan(max, min);
+
+        return unchecked((int)(Scale((uint)(max - min) + 1u) + (uint)min));
     }
 
     public uint NextUInt()
@@ -57,7 +61,9 @@ public sealed class RandomNumberGenerator : IRandomNumberGenerator
 
     public uint NextUInt(uint min, uint max)
     {
-        return unchecked(Scale(max + 1u - min) + min);
+        ArgumentOutOfRangeException.ThrowIfLessThan(max, min);
+
+        return unchecked(Scale(max - min + 1u) + min);
     }
 
     public float NextFloat()
@@ -94,18 +100,13 @@ public sealed class RandomNumberGenerator : IRandomNumberGenerator
 
     private static uint CreateSeed()
     {
-        var seed = unchecked((uint)DateTime.Now.Ticks);
+        var seed = unchecked((uint)DateTime.UtcNow.Ticks);
         return seed == 0u ? 1u : seed;
-    }
-
-    private int Scale(int range)
-    {
-        return unchecked((int)(NextState() * (ulong)range >> 32));
     }
 
     private uint Scale(uint range)
     {
-        return (uint)(NextState() * (ulong)range >> 32);
+        return range == 0u ? NextUInt() : (uint)(NextState() * (ulong)range >> 32);
     }
 
     private uint NextState()
