@@ -8,7 +8,7 @@ description: Rules for random numbers, big numbers and shuffle bags in game code
 Rules for game code that uses this package. They hold in every game. The API is in the package's `README.md`.
 
 - Take `IRandomNumberGenerator` through the constructor. Never use `System.Random` or an engine's random API in game code.
-- Integer ranges include both ends: `NextInt(max)` returns 0 to `max` and `NextInt(min, max)` returns `min` to `max`. To pick an index, call `NextInt(count - 1)`, and check that `count` is not zero first.
+- Integer ranges include both ends: `NextInt(max)` returns 0 to `max` and `NextInt(min, max)` returns `min` to `max`. To pick an index, call `NextInt(count - 1)`, and check that `count` is not zero first: a negative `max`, or a `max` below `min`, throws.
 - Float and double ranges exclude the maximum.
 - For content that must come out the same every time, such as a generated level, create a `RandomNumberGenerator` with a seed derived from the content's id, such as `layerIndex + 1`. Small and sequential seeds are fine: the generator mixes the seed itself, so do not hash it first. The same seed gives the same sequence on every platform. Never seed with zero; it throws.
 - Tests create `new RandomNumberGenerator(seed)` with a fixed seed instead of a fake generator.
