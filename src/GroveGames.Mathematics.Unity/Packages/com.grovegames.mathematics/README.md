@@ -40,7 +40,7 @@ var total = cost * BigNumber.Pow(1.15d, 50d);
 BigNumber.TryParse("2.5e6", out var parsed);
 ```
 
-Integer ranges include both ends: `NextInt(10)` returns 0 to 10, and `NextInt(1, 6)` returns 1 to 6. Any range up to the full 32 bits works. A negative `max`, or a `max` below `min`, throws `ArgumentOutOfRangeException`. Float and double ranges exclude the maximum. A seed must not be zero.
+Integer ranges include both ends: `NextInt(10)` returns 0 to 10, and `NextInt(1, 6)` returns 1 to 6. Any range up to the full 32 bits works. A negative `max`, or a `max` below `min`, throws `ArgumentOutOfRangeException`. Float and double ranges exclude the maximum, though rounding can rarely return it, so clamp a result you use as an index. A seed must not be zero. Generators created without a seed in the same instant still get different seeds.
 
 ## Unity
 
