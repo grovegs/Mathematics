@@ -1,4 +1,6 @@
-﻿namespace GroveGames.Mathematics;
+﻿using System.Threading;
+
+namespace GroveGames.Mathematics;
 
 public sealed class RandomNumberGenerator : IRandomNumberGenerator
 {
@@ -6,6 +8,8 @@ public sealed class RandomNumberGenerator : IRandomNumberGenerator
     private const uint FloatOneBits = 0x3f800000u;
     private const ulong DoubleOneBits = 0x3ff0000000000000ul;
     private const uint SeedMultiplier = 2654435761u;
+
+    private static int s_seedCount;
 
     private readonly uint _seed;
     private uint _state;
@@ -100,7 +104,8 @@ public sealed class RandomNumberGenerator : IRandomNumberGenerator
 
     private static uint CreateSeed()
     {
-        var seed = unchecked((uint)DateTime.UtcNow.Ticks);
+        var count = unchecked((uint)Interlocked.Increment(ref s_seedCount));
+        var seed = unchecked((uint)DateTime.UtcNow.Ticks ^ (count * SeedMultiplier));
         return seed == 0u ? 1u : seed;
     }
 

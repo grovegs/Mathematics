@@ -242,4 +242,17 @@ public sealed class RandomNumberGeneratorTests
 
         Assert.Throws<ArgumentOutOfRangeException>(() => random.NextUInt(5u, 1u));
     }
+
+    [Fact]
+    public void Constructor_WithoutSeedManyTimesInARow_UsesDifferentSeeds()
+    {
+        var seeds = new System.Collections.Generic.HashSet<uint>();
+
+        for (var i = 0; i < 1000; i++)
+        {
+            seeds.Add(new RandomNumberGenerator().Seed);
+        }
+
+        Assert.Equal(1000, seeds.Count);
+    }
 }
