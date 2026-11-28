@@ -38,5 +38,22 @@ namespace GroveGames.Mathematics.Unity.Globalization.Editor.Tests
             Assert.That(formatted, Is.False);
             Assert.That(charsWritten, Is.EqualTo(0));
         }
+
+        [Test]
+        public void TryParse_Percent_ReturnsTheFraction()
+        {
+            var parsed = BigNumberPercentFormatter.TryParse("1.5aa%", out var value);
+
+            Assert.That(parsed, Is.True);
+            Assert.That(value, Is.EqualTo(new BigNumber(1.5d, 13L)));
+        }
+
+        [Test]
+        public void TryParse_MissingPercentSign_ReturnsFalse()
+        {
+            var parsed = BigNumberPercentFormatter.TryParse("15", out _);
+
+            Assert.That(parsed, Is.False);
+        }
     }
 }

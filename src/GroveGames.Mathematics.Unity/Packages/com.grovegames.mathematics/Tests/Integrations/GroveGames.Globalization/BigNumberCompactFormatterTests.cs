@@ -67,5 +67,42 @@ namespace GroveGames.Mathematics.Unity.Globalization.Editor.Tests
             Assert.That(formatted, Is.True);
             Assert.That(destination.Slice(0, charsWritten).ToString(), Is.EqualTo("999"));
         }
+
+        [TestCase(0d, 0L)]
+        [TestCase(2.5d, 2L)]
+        [TestCase(1.25d, 6L)]
+        [TestCase(1.5d, 15L)]
+        [TestCase(1.5d, 400L)]
+        [TestCase(-1.5d, 6L)]
+        public void TryParse_FormattedValue_RoundTrips(double mantissa, long exponent)
+        {
+            var value = new BigNumber(mantissa, exponent);
+            Span<char> destination = stackalloc char[BigNumberCompactFormatter.MaxLength];
+            BigNumberCompactFormatter.TryFormat(value, NumberRounding.Nearest, destination, out var charsWritten);
+            var text = destination.Slice(0, charsWritten).ToString();
+
+            var parsed = BigNumberCompactFormatter.TryParse(text, out var result);
+            BigNumberCompactFormatter.TryFormat(result, NumberRounding.Nearest, destination, out var rewritten);
+
+            Assert.That(parsed, Is.True);
+            Assert.That(destination.Slice(0, rewritten).ToString(), Is.EqualTo(text));
+        }
+
+        [Test]
+        public void TryParse_LetterUnit_ReturnsTheValue()
+        {
+            var parsed = BigNumberCompactFormatter.TryParse("10aa", out var value);
+
+            Assert.That(parsed, Is.True);
+            Assert.That(value, Is.EqualTo(new BigNumber(1d, 16L)));
+        }
+
+        [Test]
+        public void TryParse_InvalidText_ReturnsFalse()
+        {
+            var parsed = BigNumberCompactFormatter.TryParse("1e3", out _);
+
+            Assert.That(parsed, Is.False);
+        }
     }
 }

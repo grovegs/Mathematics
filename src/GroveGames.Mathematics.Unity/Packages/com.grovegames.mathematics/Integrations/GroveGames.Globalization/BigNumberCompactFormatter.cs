@@ -11,5 +11,17 @@ namespace GroveGames.Mathematics.Unity
         {
             return CompactFormatter.TryFormat(value.Mantissa, value.Exponent, rounding, destination, out charsWritten);
         }
+
+        public static bool TryParse(ReadOnlySpan<char> text, out BigNumber value)
+        {
+            if (!CompactFormatter.TryParse(text, out double mantissa, out long exponent))
+            {
+                value = default;
+                return false;
+            }
+
+            value = new BigNumber(mantissa, exponent);
+            return true;
+        }
     }
 }
