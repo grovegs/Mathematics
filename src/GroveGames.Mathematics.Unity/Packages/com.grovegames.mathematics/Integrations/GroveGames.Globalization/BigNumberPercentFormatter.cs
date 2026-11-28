@@ -11,5 +11,17 @@ namespace GroveGames.Mathematics.Unity
         {
             return PercentFormatter.TryFormat(value.Mantissa, value.Exponent, destination, out charsWritten);
         }
+
+        public static bool TryParse(ReadOnlySpan<char> text, out BigNumber value)
+        {
+            if (!PercentFormatter.TryParse(text, out double mantissa, out long exponent))
+            {
+                value = default;
+                return false;
+            }
+
+            value = new BigNumber(mantissa, exponent);
+            return true;
+        }
     }
 }

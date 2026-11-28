@@ -75,7 +75,7 @@ builder.AddRandomNumberGenerator();
 
 - With [GroveGames.DependencyInjection](https://github.com/grovegs/DependencyInjection) installed, `AddRandomNumberGenerator()` registers `IRandomNumberGenerator` as a singleton.
 - With [GroveGames.Serialization](https://github.com/grovegs/Serialization) installed, `BigNumberFormatter` serializes `BigNumber` as its mantissa and exponent.
-- With [GroveGames.Globalization](https://github.com/grovegs/Globalization) installed, `BigNumberCompactFormatter` and `BigNumberPercentFormatter` write a `BigNumber` as `1.5aa` or `190M%`.
+- With [GroveGames.Globalization](https://github.com/grovegs/Globalization) installed, `BigNumberCompactFormatter` and `BigNumberPercentFormatter` write a `BigNumber` as `1.5aa` or `190M%`, and their `TryParse` reads that text back.
 
 ## Development
 
